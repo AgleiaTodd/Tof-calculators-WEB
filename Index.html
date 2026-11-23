@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Tower of Fantasy - Probability Calculators</title>
+    <style>
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font: 15px/1.5 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+            color: #edf4fa;
+            background: radial-gradient(ellipse at 50% 0, #263c50, #111925 55%, #0b111b) fixed;
+            min-height: 100vh
+        }
+
+        #app {
+            max-width: 1150px;
+            margin: auto;
+            padding: 16px
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 15px 22px;
+            border: 1px solid #52677e;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #1c2b3c, #101a27);
+            margin-bottom: 16px
+        }
+
+        h1 {
+            font-size: clamp(22px, 4vw, 35px);
+            letter-spacing: 3px;
+            color: #f2d58c;
+            margin: 0
+        }
+
+        h2.s {
+            color: #75e5f2;
+            font-size: 19px;
+            letter-spacing: 5px;
+            margin: 6px 0
+        }
+
+        header p {
+            color: #c1d0de;
+            margin: 0
+        }
+
+        h3.t {
+            color: #f2d58c;
+            border-bottom: 1px solid #52677e;
+            padding-bottom: 6px;
+            margin: 22px 0 10px;
+            font-size: 17px
+        }
+
+        .tabs {
+            display: flex;
+            gap: 6px;
+            border-bottom: 1px solid #52677e;
+            margin-top: 12px
+        }
+
+        .tabs button {
+            background: none;
+            border: 0;
+            border-bottom: 3px solid transparent;
+            color: #e5d5a9;
+            font: 700 16px inherit;
+            padding: 10px 16px;
+            cursor: pointer
+        }
+
+        .tabs button.on {
+            color: #f2d58c;
+            border-color: #e6c778
+        }
+
+        .panel {
+            background: #1c2b3c;
+            border: 1px solid #52677e;
+            border-radius: 14px;
+            padding: 15px
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 14px
+        }
+
+        .row4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 14px
+        }
+
+        label {
+            display: block;
+            color: #e5d5a9;
+            font-weight: 600;
+            font-size: 14px;
+            margin: 8px 0 3px
+        }
+
+        input[type=number],
+        select {
+            width: 100%;
+            background: #cbd0d5;
+            color: #172638;
+            border: 1px solid #929da8;
+            border-radius: 7px;
+            padding: 8px;
+            font: inherit
+        }
+
+        .chk {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            background: #1c2b3c;
+            border: 1px solid #52677e;
+            border-radius: 10px;
+            padding: 14px;
+            color: #f2d58c;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 0
+        }
+
+        .chk input {
+            width: 22px;
+            height: 22px;
+            accent-color: #e6c778
+        }
+
+        .radio label {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            font-weight: 500;
+            margin: 4px 0;
+            cursor: pointer
+        }
+
+        .radio input {
+            accent-color: #e6c778
+        }
+
+        .go {
+            width: 100%;
+            margin-top: 16px;
+            min-height: 55px;
+            background: linear-gradient(90deg, #b48b43, #e6c778);
+            color: #111925;
+            font: bold 17px inherit;
+            border: 0;
+            border-radius: 10px;
+            cursor: pointer
+        }
+
+        .go:disabled {
+            opacity: .6;
+            cursor: wait
+        }
+
+        .res {
+            background: #d9dde1;
+            color: #172638;
+            border: 2px solid #d2b36d;
+            border-radius: 14px;
+            padding: 22px;
+            margin-top: 10px;
+            overflow-x: auto
+        }
+
+        .res h1,
+        .res h2,
+        .res h3 {
+            color: #183d58;
+            font-weight: 800;
+            letter-spacing: 0;
+            font-size: 1.3em;
+            margin: .4em 0
+        }
+
+        .res h2 {
+            font-size: 1.15em
+        }
+
+        .res h3 {
+            font-size: 1.05em
+        }
+
+        .res table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 8px 0
+        }
+
+        .res th {
+            background: #c2ccd5;
+            color: #183d58;
+            padding: 10px;
+            border: 1px solid #aebfce;
+            text-align: right
+        }
+
+        .res td {
+            padding: 9px 10px;
+            border: 1px solid #b8c1ca;
+            text-align: right;
+            font-variant-numeric: tabular-nums
+        }
+
+        .res th:first-child,
+        .res td:first-child {
+            text-align: left
+        }
+
+        .res tr:nth-child(even) td {
+            background: #cbd2d9
+        }
+
+        .res hr {
+            border: 0;
+            border-top: 1px solid #aebfce;
+            margin: 16px 0
+        }
+
+        .res li {
+            margin: 2px 0
+        }
+
+        canvas {
+            width: 100%;
+            display: block;
+            border-radius: 10px;
+            margin-top: 12px;
+            border: 2px solid #d2b36d
+        }
+
+        .err {
+            background: #5a1f2b;
+            border: 1px solid #e65d68;
+            color: #ffd6db;
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 12px
+        }
+
+        .hid {
+            display: none
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px 5px;
+            color: #8297aa;
+            font-size: 11px;
+            letter-spacing: 1px
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <header>
+            <h1>PROBABILITY CALCULATORS</h1>
+            <h2 class="s">TOWER OF FANTASY</h2>
+            <p>MATRICES &amp; RED NUCLEUS WEAPON BANNER</p>
+        </header>
+
+        <label for="lang">Language / Langue</label>
+        <select id="lang">
+            <option>English</option>
+            <option>Français</option>
+        </select>
+
+        <div class="tabs"><button class="on" data-tab="m">🔷 Matrices</button><button data-tab="r">🔥 Red
+                Nucleus</button></div>
+
+        <!-- MATRICES -->
+        <section id="tab-m">
+            <h3 class="t">YOUR PULLING SITUATION</h3>
+            <div class="row">
+                <div class="panel">
+                    <label>Number of pulls / Nombre de tirages</label><input type="number" id="m-pulls" value="320"
+                        min="1" step="1">
+                    <label>Initial chips / Chips initiales</label><input type="number" id="m-chips" value="0" min="0"
+                        step="1">
+                </div>
+                <div class="panel">
+                    <label>Current pity counter (0-39)</label><input type="number" id="m-pity" value="0" min="0"
+                        max="39" step="1">
+                    <div class="row">
+                        <div><label>Previous SSR #1</label><select id="m-l1">
+                                <option>S</option>
+                                <option>L</option>
+                            </select></div>
+                        <div><label>Previous SSR #2</label><select id="m-l2">
+                                <option>L</option>
+                                <option>S</option>
+                            </select></div>
+                    </div>
+                </div>
+            </div>
+            <h3 class="t">YOUR MATRIX INVENTORY</h3>
+            <p style="margin:0 0 8px">Total number of copies owned for each matrix. / Nombre total de copies possédées
+                par matrice.</p>
+            <div class="row4">
+                <div><label>Matrix A</label><input type="number" id="m-A" value="0" min="0" step="1"></div>
+                <div><label>Matrix B</label><input type="number" id="m-B" value="0" min="0" step="1"></div>
+                <div><label>Matrix C</label><input type="number" id="m-C" value="0" min="0" step="1"></div>
+                <div><label>Matrix D</label><input type="number" id="m-D" value="0" min="0" step="1"></div>
+            </div>
+            <h3 class="t">PROGRESSION OPTIONS</h3>
+            <label class="chk"><input type="checkbox" id="m-prog" checked> Display probability table and graph every 20
+                pulls / Afficher le tableau et le graphique tous les 20 tirages</label>
+            <button class="go" id="m-go">CALCULATE PROBABILITIES</button>
+            <div id="m-err" class="err hid"></div>
+            <h3 class="t">PROBABILITY RESULTS</h3>
+            <div class="res" id="m-out">Your results will appear here.</div>
+            <canvas id="m-cv" class="hid"></canvas>
+        </section>
+
+        <!-- RED NUCLEUS -->
+        <section id="tab-r" class="hid">
+            <h3 class="t">YOUR PULLING SITUATION / VOTRE SITUATION</h3>
+            <div class="row">
+                <div class="panel">
+                    <label>Number of pulls / Nombre de tirages</label><input type="number" id="r-pulls" value="160"
+                        min="1" max="1000" step="1">
+                    <label>Simulations (more = more precise / plus = plus précis)</label><input type="number"
+                        id="r-sims" value="100000" min="1000" max="500000" step="1000">
+                    <label>Current flame gold / Flame gold actuels</label><input type="number" id="r-gold" value="0"
+                        min="0" step="1">
+                </div>
+                <div class="panel">
+                    <label>Current pity counter (0-79) / Compteur de pity</label><input type="number" id="r-pity"
+                        value="0" min="0" max="79" step="1">
+                    <label>Last two SSRs (S = standard, L = limited) / Deux derniers SSR</label>
+                    <select id="r-hist">
+                        <option value="">Unknown / Inconnu</option>
+                        <option>SS</option>
+                        <option>SL</option>
+                        <option>LS</option>
+                        <option>LL</option>
+                    </select>
+                </div>
+            </div>
+            <h3 class="t">TABLE OPTIONS / OPTIONS DU TABLEAU</h3>
+            <div class="row">
+                <div class="panel radio"><label>Progression table and graph / Tableau et graphique</label>
+                    <label><input type="radio" name="rt" value="0"> No table / Pas de tableau</label>
+                    <label><input type="radio" name="rt" value="10" checked> Every 10 pulls / Tous les 10
+                        tirages</label>
+                    <label><input type="radio" name="rt" value="1"> Every pull / Chaque tirage</label>
+                </div>
+                <div class="panel radio"><label>Table type / Type de tableau</label>
+                    <label><input type="radio" name="rk" value="exact"> Exact probability / Probabilité exacte</label>
+                    <label><input type="radio" name="rk" value="atleast" checked> At least / Au moins</label>
+                </div>
+            </div>
+            <button class="go" id="r-go">CALCULATE PROBABILITIES</button>
+            <div id="r-err" class="err hid"></div>
+            <h3 class="t">PROBABILITY RESULTS</h3>
+            <div class="res" id="r-out">Your results will appear here.</div>
+            <canvas id="r-cv" class="hid"></canvas>
+        </section>
+
+        <footer>COMMUNITY FAN-MADE TOOL<br>TOWER OF FANTASY PROBABILITY CALCULATORS</footer>
+    </div>
+
+    <script>
+        "use strict";
+        /* ================= WORKER CODE (compute engines) ================= */
+        function WORKER() {
+            const SSR = 0.017, GUAR = 40, CHIP = 80, EPS = 1e-18;
+
+            // Exact distribution of the number of limited SSRs (pity 40, 50/50 + hidden rule), per checkpoint
+            function limitedDist(M, c0, a0, b0, cps) {
+                const K = M + 1;
+                let cur = new Float64Array(160 * K), nxt = new Float64Array(160 * K);
+                cur[(c0 * 4 + a0 * 2 + b0) * K] = 1;
+                const saved = cps.map(() => new Float64Array(K));
+                let ci = 0;
+                for (let p = 1; p <= M; p++) {
+                    nxt.fill(0);
+                    const top = p - 1;
+                    for (let c = 0; c < 40; c++) {
+                        const g = c === GUAR - 1, pn = g ? 0 : 1 - SSR, ps = g ? 1 : SSR, nc = g ? 0 : c + 1;
+                        for (let d1 = 0; d1 < 2; d1++)for (let d2 = 0; d2 < 2; d2++) {
+                            const base = (c * 4 + d1 * 2 + d2) * K,
+                                pstd = d1 && d2 ? 1 : (!d1 && !d2 ? 0 : 0.5), plim = 1 - pstd,
+                                sNon = (nc * 4 + d1 * 2 + d2) * K, sStd = (nc * 4 + d2 * 2) * K, sLim = sStd + K;
+                            const a = pn, b = ps * pstd, l = ps * plim;
+                            for (let k = 0; k <= top; k++) {
+                                const pr = cur[base + k];
+                                if (pr < EPS) continue;
+                                if (a > 0) nxt[sNon + k] += pr * a;
+                                if (b > 0) nxt[sStd + k] += pr * b;
+                                if (l > 0) nxt[sLim + k + 1] += pr * l;
+                            }
+                        }
+                    }
+                    const t = cur; cur = nxt; nxt = t;
+                    if (ci < cps.length && p === cps[ci]) {
+                        const s = saved[ci];
+                        for (let st = 0; st < 160; st++) { const o = st * K; for (let k = 0; k <= p; k++)s[k] += cur[o + k]; }
+                        ci++;
+                    }
+                }
+                return saved;
+            }
+
+            const V = new Int32Array(4);
+            function decode(code, B) {
+                let t = code;
+                const d = t % B; t = (t - d) / B; const c = t % B; t = (t - c) / B; const b = t % B; const a = (t - b) / B;
+                V[0] = a; V[1] = b; V[2] = c; V[3] = d;
+            }
+            function bubbleUp(i) { // V[i] was incremented in a sorted array
+                while (i < 3 && V[i] > V[i + 1]) { const t = V[i]; V[i] = V[i + 1]; V[i + 1] = t; i++; }
+            }
+
+            function advance(states, B) {
+                const out = new Map();
+                for (const [code, pr] of states) {
+                    decode(code, B);
+                    const a = V[0], b = V[1], c = V[2], d = V[3];
+                    let nm = 0; if (a === d) nm++; if (b === d) nm++; if (c === d) nm++; nm++;
+                    const pm = (nm - 1) / (3 * nm);
+                    for (let i = 0; i < 4; i++) {
+                        const cnt = i === 0 ? a : i === 1 ? b : i === 2 ? c : d;
+                        const mp = cnt === d ? pm : 1 / 3;
+                        if (mp === 0) continue;
+                        const np = pr * mp;
+                        if (np < EPS) continue;
+                        V[0] = a; V[1] = b; V[2] = c; V[3] = d; V[i]++; bubbleUp(i);
+                        const key = ((V[0] * B + V[1]) * B + V[2]) * B + V[3];
+                        const o = out.get(key);
+                        out.set(key, o === undefined ? np : o + np);
+                    }
+                }
+                return out;
+            }
+
+            function objectives(states, B, pcs) {
+                const n = pcs.length, R = new Float64Array(n * 8);
+                for (const [code, pr] of states) {
+                    decode(code, B);
+                    let prev = 0;
+                    for (let i = 0; i < n; i++) {
+                        for (let j = prev; j < pcs[i]; j++) {
+                            if (V[0] >= 4) break;
+                            V[0]++; bubbleUp(0);
+                        }
+                        prev = pcs[i];
+                        const o = i * 8;
+                        for (let s = 0; s < 4; s++) {
+                            const v4 = V[0] >= s + 1, v3 = v4 || (V[1] >= s + 1 && V[0] >= s);
+                            if (v3) R[o + s] += pr;
+                            if (v4) R[o + 4 + s] += pr;
+                        }
+                    }
+                }
+                return R;
+            }
+
+            function mat(m) {
+                const { pulls, show, pity, l1, l2, counts, chips } = m;
+                const cps = [];
+                if (show) for (let x = 20; x <= pulls; x += 20)cps.push(x);
+                if (cps[cps.length - 1] !== pulls) cps.push(pulls);
+                const B = Math.max(...counts) + pulls + 2;
+                const pcs = [...new Set(cps.map(p => Math.floor((chips + p) / CHIP)))].sort((a, b) => a - b);
+                const lim = limitedDist(pulls, pity, l1 === "S" ? 0 : 1, l2 === "S" ? 0 : 1, cps);
+                let mx = 0;
+                for (const arr of lim) for (let k = arr.length - 1; k > mx; k--)if (arr[k] > 1e-16) { mx = k; break; }
+                let states = new Map([[((counts[0] * B + counts[1]) * B + counts[2]) * B + counts[3], 1]]);
+                const objs = [];
+                for (let k = 0; k <= mx; k++) {
+                    objs.push(objectives(states, B, pcs));
+                    if (k < mx) states = advance(states, B);
+                }
+                const res = cps.map((p, ci) => {
+                    const pi = pcs.indexOf(Math.floor((chips + p) / CHIP)), r = new Array(8).fill(0), L = lim[ci];
+                    for (let k = 0; k <= mx; k++) {
+                        const pl = L[k]; if (pl === 0) continue;
+                        const o = objs[k], b = pi * 8;
+                        for (let j = 0; j < 8; j++)r[j] += pl * o[b + j];
+                    }
+                    return r;
+                });
+                return { cps, res };
+            }
+
+            // Monte Carlo, sequential per simulation (cache friendly), 1 random number per pull
+            function sfc32(a, b, c, d) { return function () { a >>>= 0; b >>>= 0; c >>>= 0; d >>>= 0; let t = (a + b) | 0; a = b ^ (b >>> 9); b = (c + (c << 3)) | 0; c = (c << 21) | (c >>> 11); d = (d + 1) | 0; t = (t + d) | 0; c = (c + t) | 0; return (t >>> 0) / 4294967296; }; }
+
+            function rn(m) {
+                const { pulls, sims, pity, h2, h1, gold, seed } = m;
+                const counts = new Int32Array((pulls + 1) * 8);
+                const rnd = sfc32(seed[0], seed[1], seed[2], seed[3]);
+                for (let i = 0; i < 15; i++)rnd();
+                const R = 0.0075, SR = R + 0.12;
+                const c0 = Math.min(((gold / 120) | 0), 7);
+                for (let s = 0; s < sims; s++) {
+                    let pi = pity, x1 = h1, x2 = h2, lim = 0, g = gold;
+                    counts[c0]++;
+                    for (let t = 1; t <= pulls; t++) {
+                        g++;
+                        let ssr = false;
+                        if (pi === 79) { ssr = true; pi = 0; }
+                        else {
+                            const u = rnd(); pi++;
+                            if (u < R) ssr = true; else if (u < SR) g++;
+                        }
+                        if (ssr) {
+                            let L;
+                            if (x1 === 1 && x2 === 1) L = true; else if (x1 === 2 && x2 === 2) L = false; else L = rnd() < 0.5;
+                            if (L) lim++; else g += 10;
+                            x2 = x1; x1 = L ? 2 : 1;
+                        }
+                        let cp = lim + ((g / 120) | 0); if (cp > 7) cp = 7;
+                        counts[t * 8 + cp]++;
+                    }
+                }
+                return counts;
+            }
+
+            onmessage = e => {
+                const m = e.data;
+                try { postMessage({ r: m.job === "mat" ? mat(m) : rn(m) }); }
+                catch (err) { postMessage({ err: String(err && err.message || err) }); }
+            };
+        }
+
+        /* ================= WORKER POOL ================= */
+        const blobURL = URL.createObjectURL(new Blob(["(" + WORKER.toString() + ")()"], { type: "text/javascript" }));
+        const pool = [];
+        function call(i, msg) {
+            return new Promise((res, rej) => {
+                const w = pool[i] || (pool[i] = new Worker(blobURL));
+                w.onmessage = e => e.data.err ? rej(new Error(e.data.err)) : res(e.data.r);
+                w.onerror = e => rej(new Error(e.message || "Worker error"));
+                w.postMessage(msg);
+            });
+        }
+
+        /* ================= HELPERS ================= */
+        const $ = id => document.getElementById(id);
+        const fr = () => $("lang").value === "Français";
+        const T = (en, f) => fr() ? f : en;
+        const pct = (v, d) => (v * 100).toFixed(d) + "%";
+        const table = (head, rows) => "<table><thead><tr>" + head.map(h => `<th>${h}</th>`).join("") + "</tr></thead><tbody>" + rows.map(r => "<tr>" + r.map(c => `<td>${c}</td>`).join("") + "</tr>").join("") + "</tbody></table>";
+        const nint = id => { const v = parseInt($(id).value, 10); return Number.isFinite(v) ? v : 0; };
+        function showErr(id, msg) { const e = $(id); e.textContent = msg || ""; e.classList.toggle("hid", !msg); }
+        const COLORS = ["#E5B94F", "#F28C45", "#E65D68", "#BB83E5", "#40BFD2", "#468FE0", "#49B88A", "#A4C75A"];
+        const charts = {};
+
+        function drawChart(cv, spec) {
+            charts[cv.id] = spec;
+            const { xs, series, title, xl, yl, dots } = spec;
+            const dpr = window.devicePixelRatio || 1, W = cv.clientWidth || 800, H = Math.round(Math.max(300, Math.min(480, W * .5)));
+            cv.width = W * dpr; cv.height = H * dpr; cv.style.height = H + "px";
+            const g = cv.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0);
+            g.fillStyle = "#d9dde1"; g.fillRect(0, 0, W, H);
+            const L = 52, Rr = 16, Tt = 38, Bb = 46, pw = W - L - Rr, ph = H - Tt - Bb, xm = Math.max(1, xs[xs.length - 1]);
+            const X = x => L + x / xm * pw, Y = y => Tt + ph - y / 100 * ph;
+            g.font = "12px system-ui,sans-serif"; g.fillStyle = "#172638"; g.strokeStyle = "rgba(23,38,56,.2)"; g.lineWidth = 1;
+            g.textAlign = "right"; g.textBaseline = "middle";
+            for (let y = 0; y <= 100; y += 20) { g.beginPath(); g.setLineDash([4, 4]); g.moveTo(L, Y(y) + .5); g.lineTo(L + pw, Y(y) + .5); g.stroke(); g.fillText(y + "", L - 6, Y(y)); }
+            const raw = xm / Math.max(2, Math.floor(pw / 70)), mag = Math.pow(10, Math.floor(Math.log10(raw))), st = [1, 2, 5, 10].map(f => f * mag).find(s => s >= raw) || raw;
+            g.textAlign = "center"; g.textBaseline = "top";
+            for (let x = 0; x <= xm; x += st) { g.beginPath(); g.moveTo(X(x) + .5, Tt); g.lineTo(X(x) + .5, Tt + ph); g.stroke(); g.fillText(Math.round(x) + "", X(x), Tt + ph + 6); }
+            g.setLineDash([]);
+            g.fillStyle = "#183d58"; g.font = "bold 15px system-ui,sans-serif"; g.fillText(title, L + pw / 2, 10);
+            g.font = "12px system-ui,sans-serif"; g.fillText(xl, L + pw / 2, H - 18);
+            g.save(); g.translate(14, Tt + ph / 2); g.rotate(-Math.PI / 2); g.textBaseline = "middle"; g.fillText(yl, 0, 0); g.restore();
+            g.lineWidth = 2; g.lineJoin = "round";
+            for (const s of series) {
+                g.strokeStyle = s.color; g.fillStyle = s.color; g.beginPath();
+                s.ys.forEach((y, i) => { const px = X(xs[i]), py = Y(y); i ? g.lineTo(px, py) : g.moveTo(px, py); });
+                g.stroke();
+                if (dots) for (let i = 0; i < s.ys.length; i++) { g.beginPath(); g.arc(X(xs[i]), Y(s.ys[i]), 2.5, 0, 6.283); g.fill(); }
+            }
+            // legend
+            const cols = 2, lw = 70, lh = 17, n = series.length, rows = Math.ceil(n / cols);
+            g.fillStyle = "rgba(217,221,225,.9)"; g.strokeStyle = "#929da8";
+            g.fillRect(L + 8, Tt + 6, cols * lw + 10, rows * lh + 8); g.strokeRect(L + 8.5, Tt + 6.5, cols * lw + 10, rows * lh + 8);
+            g.textAlign = "left"; g.textBaseline = "middle"; g.font = "11px system-ui,sans-serif";
+            series.forEach((s, i) => {
+                const cx = L + 14 + (i % cols) * lw, cy = Tt + 16 + Math.floor(i / cols) * lh;
+                g.fillStyle = s.color; g.fillRect(cx, cy - 2, 16, 4); g.fillStyle = "#172638"; g.fillText(s.label, cx + 21, cy);
+            });
+        }
+        let rz; window.addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => { for (const id in charts) { const c = $(id); if (!c.classList.contains("hid")) drawChart(c, charts[id]); } }, 120); });
+
+        /* ================= TABS ================= */
+        document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => {
+            document.querySelectorAll(".tabs button").forEach(x => x.classList.toggle("on", x === b));
+            $("tab-m").classList.toggle("hid", b.dataset.tab !== "m");
+            $("tab-r").classList.toggle("hid", b.dataset.tab !== "r");
+            for (const id in charts) { const c = $(id); if (!c.classList.contains("hid") && c.clientWidth) drawChart(c, charts[id]); }
+        });
+
+        /* ================= MATRICES ================= */
+        $("m-go").onclick = async () => {
+            showErr("m-err");
+            const pulls = nint("m-pulls"), chips = nint("m-chips"), pity = nint("m-pity"), counts = ["A", "B", "C", "D"].map(k => nint("m-" + k)), show = $("m-prog").checked;
+            if (pulls < 1) return showErr("m-err", T("Number of pulls must be at least 1.", "Le nombre de tirages doit être au moins 1."));
+            if (pity < 0 || pity > 39) return showErr("m-err", T("Pity must be between 0 and 39.", "Le pity doit être entre 0 et 39."));
+            if (chips < 0 || counts.some(x => x < 0)) return showErr("m-err", T("All inventory and chip values must be non-negative.", "Les valeurs d'inventaire et de chips doivent être positives."));
+            counts.sort((a, b) => a - b);
+            const btn = $("m-go"); btn.disabled = true;
+            const t0 = performance.now();
+            try {
+                await new Promise(r => setTimeout(r, 0));
+                const { cps, res } = await call(0, { job: "mat", pulls, chips, pity, show, counts, l1: $("m-l1").value, l2: $("m-l2").value });
+                const v = res[cps.length - 1], purch = Math.floor((chips + pulls) / 80), rem = (chips + pulls) % 80, el = ((performance.now() - t0) / 1000).toFixed(2);
+                let o = `<h1>${T("Probability results", "Résultats des probabilités")}</h1><h2>${T("3-piece objectives", "Objectifs 3 pièces")}</h2>`;
+                o += table([T("Objective", "Objectif"), "Probability"], [0, 1, 2, 3].map(s => [`<b>3P ${s}★</b>`, `<b>${pct(v[s], 6)}</b>`]));
+                o += `<h2>${T("4-piece objectives", "Objectifs 4 pièces")}</h2>`;
+                o += table([T("Objective", "Objectif"), "Probability"], [0, 1, 2, 3].map(s => [`<b>4P ${s}★</b>`, `<b>${pct(v[4 + s], 6)}</b>`]));
+                o += `<hr><h2>${T("Resource information", "Informations sur les ressources")}</h2><ul>
+<li>${T("Available pulls", "Tirages disponibles")}: <b>${pulls}</b></li><li>${T("Initial chips", "Chips initiales")}: <b>${chips}</b></li>
+<li>${T("Total chips", "Chips totales")}: <b>${chips + pulls}</b></li><li>${T("Available purchases", "Achats possibles")}: <b>${purch}</b></li>
+<li>${T("Remaining chips", "Chips restantes")}: <b>${rem}</b></li><li>${T("Calculation time", "Temps de calcul")}: <b>${el} s</b></li></ul>`;
+                const labels = ["3P 0★", "3P 1★", "3P 2★", "3P 3★", "4P 0★", "4P 1★", "4P 2★", "4P 3★"];
+                if (show) {
+                    o += `<hr><h1>${T("Probability progression", "Tableau de progression")}</h1><p>${T("Probabilities calculated every 20 pulls, including the requested final checkpoint.", "Probabilités calculées tous les 20 tirages, avec le dernier palier demandé.")}</p>`;
+                    o += table(["Pulls", ...labels], cps.map((c, i) => [c, ...res[i].map(x => pct(x, 4))]));
+                }
+                o += `<hr><h3>${T("Rules", "Rappel des règles")}</h3><ul>
+<li>${T("<b>3P N★</b>: three different matrices with at least N stars and the fourth with at least N-1 stars.", "<b>3P N★</b> : trois matrices différentes avec au moins N étoiles et la quatrième avec au moins N-1 étoiles.")}</li>
+<li>${T("<b>4P N★</b>: all four different matrices with at least N stars.", "<b>4P N★</b> : les quatre matrices différentes avec au moins N étoiles.")}</li>
+<li>${T("Chips are spent after all pulls.", "Les chips sont dépensées après tous les tirages.")}</li>
+<li>${T("Dynamic matrix blocking is taken into account.", "Le blocage dynamique est pris en compte.")}</li></ul>`;
+                $("m-out").innerHTML = o;
+                const cv = $("m-cv");
+                if (show) {
+                    cv.classList.remove("hid");
+                    drawChart(cv, {
+                        xs: cps, dots: true, title: T("Evolution of matrix probabilities", "Évolution des probabilités des matrices"), xl: T("Number of pulls", "Nombre de tirages"), yl: T("Probability (%)", "Probabilité (%)"),
+                        series: labels.map((l, j) => ({ label: l, color: COLORS[j], ys: res.map(r => r[j] * 100) }))
+                    });
+                } else { cv.classList.add("hid"); delete charts["m-cv"]; }
+            } catch (e) { showErr("m-err", String(e.message || e)); }
+            btn.disabled = false;
+        };
+
+        /* ================= RED NUCLEUS ================= */
+        $("r-go").onclick = async () => {
+            showErr("r-err");
+            const pulls = nint("r-pulls"), sims = nint("r-sims"), pity = nint("r-pity"), gold = nint("r-gold");
+            const hist = $("r-hist").value, step = +document.querySelector('input[name=rt]:checked').value, exact = document.querySelector('input[name=rk]:checked').value === "exact";
+            if (pulls < 1 || pulls > 1000) return showErr("r-err", T("Number of pulls must be between 1 and 1000.", "Le nombre de tirages doit être entre 1 et 1000."));
+            if (sims < 1000 || sims > 500000) return showErr("r-err", T("Number of simulations must be between 1000 and 500000.", "Le nombre de simulations doit être entre 1000 et 500000."));
+            if (pity < 0 || pity > 79) return showErr("r-err", T("Pity must be between 0 and 79.", "Le pity doit être entre 0 et 79."));
+            if (gold < 0) return showErr("r-err", T("Flame gold must be non-negative.", "Les flame gold doivent être positifs."));
+            const btn = $("r-go"); btn.disabled = true;
+            const t0 = performance.now();
+            try {
+                await new Promise(r => setTimeout(r, 0));
+                const code = { S: 1, L: 2 }, h2 = hist ? code[hist[0]] : 0, h1 = hist ? code[hist[1]] : 0;
+                const nw = Math.max(1, Math.min(navigator.hardwareConcurrency || 4, 8)), base = Math.floor(sims / nw);
+                const jobs = [];
+                for (let i = 0; i < nw; i++) {
+                    const n = i === nw - 1 ? sims - base * (nw - 1) : base;
+                    jobs.push(call(i, { job: "rn", pulls, sims: n, pity, h1, h2, gold, seed: Array.from(crypto.getRandomValues(new Uint32Array(4))) }));
+                }
+                const parts = await Promise.all(jobs);
+                const K = 8, n = (pulls + 1) * K, probs = new Float64Array(n), cum = new Float64Array(n);
+                for (let i = 0; i < n; i++) { let s = 0; for (const p of parts) s += p[i]; probs[i] = s / sims; }
+                for (let t = 0; t <= pulls; t++) { let acc = 0; for (let k = K - 1; k >= 0; k--) { acc += probs[t * K + k]; cum[t * K + k] = acc; } }
+                const el = ((performance.now() - t0) / 1000).toFixed(2), F = fr();
+                const labels = [F ? "Aucune" : "None"]; for (let i = 0; i < 7; i++)labels.push("A" + i);
+                const names = labels.map((l, k) => k === 0 ? l + (F ? " (0 copie)" : " (0 copies)") : k === 1 ? l + (F ? " (1 copie)" : " (1 copy)") : k === 7 ? l + (F ? " (7 copies ou plus)" : " (7 copies or more)") : l + ` (${k} ${F ? "copies" : "copies"})`);
+                const moe = (100 * 1.96 * 0.5 / Math.sqrt(sims)).toFixed(2);
+                let o = `<h1>${T("Red Nucleus results", "Résultats Red Nucleus")}</h1><h2>${T(`Probabilities after ${pulls} pulls`, `Probabilités après ${pulls} tirages`)}</h2>`;
+                o += table([T("Tier", "Palier"), T("Exactly", "Exactement"), T("At least", "Au moins")], names.map((nm, k) => [`<b>${nm}</b>`, pct(probs[pulls * K + k], 2), pct(cum[pulls * K + k], 2)]));
+                o += `<hr><h2>${T("Parameters", "Paramètres")}</h2><ul>
+<li>${T("Pulls", "Tirages")}: <b>${pulls}</b></li><li>${T("Simulations", "Simulations")}: <b>${sims.toLocaleString(F ? "fr-FR" : "en-US")}</b> (${nw} workers)</li>
+<li>${T("Starting pity", "Pity initial")}: <b>${pity}/80</b></li><li>${T("Last SSRs", "Derniers SSR")}: <b>${hist || T("unknown", "inconnu")}</b></li>
+<li>${T("Starting flame gold", "Flame gold initiaux")}: <b>${gold}</b></li><li>${T("Calculation time", "Temps de calcul")}: <b>${el} s</b></li></ul>
+<p><i>${T(`Monte Carlo estimate: with ${sims.toLocaleString("en-US")} simulations, the margin of error is about ±${moe} percentage point(s) at most.`, `Estimation Monte Carlo : avec ${sims.toLocaleString("fr-FR")} simulations, la marge d'erreur est d'environ ±${moe} point(s) au maximum.`)}</i></p>`;
+                const cv = $("r-cv");
+                if (step) {
+                    const data = exact ? probs : cum, cps = [];
+                    for (let t = step; t <= pulls; t += step)cps.push(t);
+                    if (cps[cps.length - 1] !== pulls) cps.push(pulls);
+                    o += `<hr><h1>${T("Probability progression", "Tableau de progression")}</h1><p>${F ? `Probabilité <b>${exact ? "exacte" : "d'en avoir au moins"}</b> pour chaque palier, aux tirages indiqués.` : `<b>${exact ? "Exact" : "At-least"}</b> probability for each tier at the given pull counts.`}</p>`;
+                    const rows = cps.map(t => { const r = [t]; for (let k = 0; k < K; k++)r.push(pct(data[t * K + k], 2)); return r; });
+                    o += table([T("Pulls", "Tirages"), ...labels], rows);
+                    const xs = [0, ...cps];
+                    drawChartLater = () => {
+                        cv.classList.remove("hid"); drawChart(cv, {
+                            xs, dots: step > 1,
+                            title: exact ? T("Exact probability of each tier", "Probabilité exacte de chaque palier") : T("Probability of reaching at least each tier", "Probabilité d'avoir au moins chaque palier"),
+                            xl: T("Number of pulls", "Nombre de tirages"), yl: T("Probability (%)", "Probabilité (%)"),
+                            series: labels.slice(1).map((l, j) => ({ label: l, color: COLORS[j], ys: xs.map(t => data[t * K + j + 1] * 100) }))
+                        });
+                    };
+                } else { drawChartLater = () => { cv.classList.add("hid"); delete charts["r-cv"]; }; }
+                o += `<hr><h3>${T("Rules", "Rappel des règles")}</h3><ul>
+<li>${T("<b>A0</b> = 1 copy of the limited weapon, <b>A6</b> = 7 copies or more (max tier).", "<b>A0</b> = 1 copie de l'arme limitée, <b>A6</b> = 7 copies ou plus (palier maximal).")}</li>
+<li>${T("<b>Exactly</b>: probability of having precisely that many copies. <b>At least</b>: that many copies or more.", "<b>Exactement</b> : probabilité d'avoir précisément ce nombre de copies. <b>Au moins</b> : ce nombre de copies ou plus.")}</li>
+<li>${T("Pity at 80 pulls (not reset if an SSR is pulled outside the pity).", "Pity à 80 tirages (non remis à zéro si un SSR sort hors pity).")}</li>
+<li>${T("Hidden rule: after SS → limited guaranteed; after LL → standard guaranteed.", "Règle cachée : après SS → limité garanti ; après LL → standard garanti.")}</li>
+<li>${T("Flame gold: +1 per pull, +1 per SR, +10 per standard SSR; 120 flame gold = 1 shop copy.", "Flame gold : +1 par tirage, +1 par SR, +10 par SSR standard ; 120 flame gold = 1 copie en boutique.")}</li></ul>`;
+                $("r-out").innerHTML = o;
+                drawChartLater();
+            } catch (e) { showErr("r-err", String(e.message || e)); }
+            btn.disabled = false;
+        };
+        let drawChartLater = () => { };
+    </script>
+</body>
+
+</html>
